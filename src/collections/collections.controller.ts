@@ -1,15 +1,24 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put
+} from '@nestjs/common';
 import { CollectionsService } from './collections.service';
-import { CreateCollectionDto } from './dto/create-collection.dto';
-import { UpdateCollectionDto } from './dto/update-collection.dto';
+import { Collection } from './entities/collection.schema';
 
 @Controller('collections')
 export class CollectionsController {
   constructor(private readonly collectionsService: CollectionsService) {}
 
   @Post()
-  create(@Body() createCollectionDto: CreateCollectionDto) {
-    return this.collectionsService.create(createCollectionDto);
+  create(
+    @Body() body: { name: string; description: string },
+  ) {
+    return this.collectionsService.create({ name: body.name, description: body.description});
   }
 
   @Get()
@@ -18,17 +27,22 @@ export class CollectionsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.collectionsService.findOne(+id);
+  findById(@Param('id') id: string) {
+    return this.collectionsService.findById(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCollectionDto: UpdateCollectionDto) {
-    return this.collectionsService.update(+id, updateCollectionDto);
+  @Put(':id')
+  update(@Param('id') id: string, @Body() body: Partial<Collection>) {
+    return this.collectionsService.update(id, body);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.collectionsService.remove(+id);
+  delete(@Param('id') id: string) {
+    return this.collectionsService.delete(id);
+  }
+
+  @Put(':id/cover/:photoId')
+  setCover(@Param('id') id: string, @Param('photoId') photoId: string) {
+    return this.collectionsService.setCoverPhoto(id, photoId);
   }
 }

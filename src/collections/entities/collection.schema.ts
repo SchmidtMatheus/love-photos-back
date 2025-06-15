@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
 
 export type CollectionDocument = Collection & Document;
 
@@ -11,8 +11,8 @@ export class Collection {
   @Prop()
   description: string;
 
-  @Prop()
-  coverUrl: string;
+  @Prop({ type: Types.ObjectId, ref: 'Photo' })
+  coverPhotoId?: Types.ObjectId;
 }
 
 export const CollectionSchema = SchemaFactory.createForClass(Collection);

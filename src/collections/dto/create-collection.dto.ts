@@ -8,8 +8,4 @@ export class CreateCollectionDto {
   @IsString()
   @IsOptional()
   description?: string;
-
-  @IsString()
-  @IsNotEmpty()
-  coverUrl: string;
 }
