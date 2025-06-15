@@ -7,8 +7,8 @@ import { CouplesModule } from './couples/couples.module';
 import { RemindersModule } from './reminders/reminders.module';
 import { ImportantDatesModule } from './important-dates/important-dates.module';
 import { ShoppingListsModule } from './shopping-lists/shopping-lists.module';
-import { EmailModule } from './email/email.module';
 import { CronModule } from './cron/cron.module';
+import { EmailModule } from './email/email.module';
 
 @Module({
   imports: [
