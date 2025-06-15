@@ -1,26 +1,34 @@
-import { Injectable } from '@nestjs/common';
-import { CreatePhotoDto } from './dto/create-photo.dto';
-import { UpdatePhotoDto } from './dto/update-photo.dto';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { Photo, PhotoDocument } from './entities/photo.schema';
 
 @Injectable()
 export class PhotosService {
-  create(createPhotoDto: CreatePhotoDto) {
-    return 'This action adds a new photo';
+  constructor(
+    @InjectModel(Photo.name) private photoModel: Model<PhotoDocument>,
+  ) {}
+
+  async create(data: Partial<Photo>): Promise<Photo> {
+    const sizeInBytes = Buffer.byteLength(data.url ?? '', 'base64');
+    const MAX_SIZE = 10 * 1024 * 1024;
+    if (sizeInBytes > MAX_SIZE) {
+      throw new BadRequestException('Imagem excede o tamanho máximo de 10MB');
+    }
+
+    const created = new this.photoModel(data);
+    return created.save();
   }
 
-  findAll() {
-    return `This action returns all photos`;
+  async findByCollection(collectionId: string): Promise<Photo[]> {
+    return this.photoModel.find({ collectionId }).exec();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} photo`;
+  async findById(id: string): Promise<Photo | null> {
+    return this.photoModel.findById(id).exec();
   }
 
-  update(id: number, updatePhotoDto: UpdatePhotoDto) {
-    return `This action updates a #${id} photo`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} photo`;
+  async delete(id: string): Promise<void> {
+    await this.photoModel.findByIdAndDelete(id);
   }
 }
