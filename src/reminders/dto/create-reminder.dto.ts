@@ -1,19 +1,18 @@
-import { IsString, IsDateString, IsMongoId, IsNotEmpty } from 'class-validator';
+import { IsString, IsDate, IsMongoId } from 'class-validator';
 
 export class CreateReminderDto {
   @IsString()
-  @IsNotEmpty()
   title: string;
 
   @IsString()
-  @IsNotEmpty()
   description: string;
 
-  @IsDateString()
-  @IsNotEmpty()
-  datetime: string;
+  @IsDate()
+  date: Date;
 
   @IsMongoId()
-  @IsNotEmpty()
+  createdBy: string;
+
+  @IsMongoId()
   destination: string;
 }
