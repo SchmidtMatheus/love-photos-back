@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, Inject, forwardRef } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { Reminder } from './schemas/reminder.schema';
@@ -14,6 +14,7 @@ export class RemindersService {
     @InjectModel(Reminder.name) private reminderModel: Model<Reminder>,
     private couplesService: CouplesService,
     private emailService: EmailService,
+    @Inject(forwardRef(() => UsersService))
     private usersService: UsersService,
   ) {}
 

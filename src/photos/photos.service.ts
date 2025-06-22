@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable, UnauthorizedException, Inject, forwardRef } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Photo, PhotoDocument } from './entities/photo.schema';
@@ -8,6 +8,7 @@ import { CollectionsService } from 'src/collections/collections.service';
 export class PhotosService {
   constructor(
     @InjectModel(Photo.name) private photoModel: Model<PhotoDocument>,
+    @Inject(forwardRef(() => CollectionsService))
     private collectionsService: CollectionsService,
   ) {}
 

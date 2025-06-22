@@ -11,6 +11,7 @@ import { CronModule } from './cron/cron.module';
 import { EmailModule } from './email/email.module';
 import { ImageUploaderModule } from './image-uploader/image-uploader.module';
 import { CollectionsModule } from './collections/collections.module';
+import { HealthModule } from './health/health.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { CollectionsModule } from './collections/collections.module';
     CronModule,
     ImageUploaderModule,
     CollectionsModule,
+    HealthModule,
   ],
 })
 export class AppModule {}
