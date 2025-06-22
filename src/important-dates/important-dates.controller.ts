@@ -10,8 +10,8 @@ export class ImportantDatesController {
   constructor(private readonly importantDatesService: ImportantDatesService) {}
 
   @Post()
-  create(@Body() createImportantDateDto: CreateImportantDateDto) {
-    return this.importantDatesService.create(createImportantDateDto);
+  create(@Body() createImportantDateDto: CreateImportantDateDto, @Request() req) {
+    return this.importantDatesService.create(createImportantDateDto, req.user.sub);
   }
 
   @Get()

@@ -13,6 +13,9 @@ export class Collection {
 
   @Prop({ type: Types.ObjectId, ref: 'Photo' })
   coverPhotoId?: Types.ObjectId;
+
+  @Prop({ type: Types.ObjectId, ref: 'Couple', required: true })
+  coupleId: Types.ObjectId;
 }
 
 export const CollectionSchema = SchemaFactory.createForClass(Collection);

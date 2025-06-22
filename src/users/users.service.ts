@@ -1,13 +1,15 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from './schemas/user.schema';
 import { CreateUserDto } from './dto/create-user.dto';
+import { CouplesService } from 'src/couples/couples.service';
 
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectModel(User.name) private userModel: Model<User>
+    @InjectModel(User.name) private userModel: Model<User>,
+    private couplesService: CouplesService
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
@@ -15,8 +17,14 @@ export class UsersService {
     return createdUser.save();
   }
 
-  async findAll(): Promise<User[]> {
-    return this.userModel.find().exec();
+  async findCoupleUsers(userId: string): Promise<User[]> {
+    const couple = await this.couplesService.findByUserId(userId);
+    if (!couple) {
+      throw new UnauthorizedException('User does not belong to a couple');
+    }
+    return this.userModel.find({
+      _id: { $in: [couple.user1, couple.user2] }
+    }).select('-password').exec();
   }
 
   async findOne(id: string): Promise<User> {

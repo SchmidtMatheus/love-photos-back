@@ -20,6 +20,9 @@ export class Reminder extends Document {
 
   @Prop({ default: false })
   isRead: boolean;
+
+  @Prop({ type: Types.ObjectId, ref: 'Couple', required: true })
+  coupleId: Types.ObjectId;
 }
 
 export const ReminderSchema = SchemaFactory.createForClass(Reminder); 
