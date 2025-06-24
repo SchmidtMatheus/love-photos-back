@@ -1,5 +1,5 @@
 // src/reminder/reminder.module.ts
-import { Module, forwardRef } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { RemindersService } from './reminders.service';
 import { RemindersController } from './reminders.controller';
@@ -13,7 +13,7 @@ import { CouplesModule } from 'src/couples/couples.module';
     MongooseModule.forFeature([{ name: Reminder.name, schema: ReminderSchema }]),
     CouplesModule,
     EmailModule,
-    forwardRef(() => UsersModule),
+    UsersModule,
   ],
   controllers: [RemindersController],
   providers: [RemindersService],

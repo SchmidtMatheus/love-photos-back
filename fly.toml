@@ -4,7 +4,7 @@
 #
 
 app = 'love-photos-back'
-primary_region = 'gru'
+primary_region = 'ord'
 
 [build]
 
