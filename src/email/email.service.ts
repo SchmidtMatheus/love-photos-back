@@ -1,34 +1,42 @@
+// email.service.ts
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import * as nodemailer from 'nodemailer';
+import axios from 'axios';
 
 @Injectable()
 export class EmailService {
-  private transporter: nodemailer.Transporter;
+  private readonly apiKey: string;
 
   constructor(private configService: ConfigService) {
-    this.transporter = nodemailer.createTransport({
-      host: this.configService.get('SMTP_HOST'),
-      port: this.configService.get('SMTP_PORT'),
-      secure: true,
-      auth: {
-        user: this.configService.get('SMTP_USER'),
-        pass: this.configService.get('SMTP_PASS'),
-      },
-    });
+    const apiKey = this.configService.get<string>('RESEND_API_KEY');
+    if (!apiKey) {
+      throw new Error('RESEND_API_KEY is not defined in environment variables');
+    }
+    this.apiKey = apiKey;
   }
 
   async sendEmail(to: string, subject: string, html: string) {
     try {
-      await this.transporter.sendMail({
-        from: this.configService.get('SMTP_FROM'),
-        to,
-        subject,
-        html,
-      });
+      const response = await axios.post(
+        'https://api.resend.com/emails',
+        {
+          from: this.configService.get('RESEND_FROM'),
+          to,
+          subject,
+          html,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${this.apiKey}`,
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+
+      return response.data;
     } catch (error) {
-      console.error('Error sending email:', error);
-      throw new Error('Failed to send email');
+      console.error('Erro ao enviar e-mail:', error.response?.data || error.message);
+      throw new Error('Falha ao enviar o e-mail');
     }
   }
 
